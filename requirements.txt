@@ -1,0 +1,11 @@
+dash
+dash-table
+gunicorn
+redis
+celery[redis]
+xlrd
+xlsxwriter
+boto3
+s3fs
+requests-aws4auth
+pipdate
