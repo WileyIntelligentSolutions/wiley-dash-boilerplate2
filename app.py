@@ -197,7 +197,6 @@ app.layout = html.Div([
 #   Callbacks
 #       - callbacks enable the interactivity of the app
 
- 
 @app.callback(Output('task-id', 'children'),
               [Input('submit', 'n_clicks')],
               [State('task-id', 'children'),     # <--- task-id must always be first
@@ -296,6 +295,7 @@ def get_results(task_status, task_id, previous_results_table):
                 href="{}/download_excel/{}".format(config.DASH_APP_NAME, task_id)
                 ),
                 html.Br(),
+                dcc.Markdown('Displaying 20 rows at a time'),
                 DataTable(id='results_table',
                             columns=[{'id': 'name', 'name': 'Name'},
                                         {'id': 'town', 'name': 'Town'},
@@ -306,7 +306,9 @@ def get_results(task_status, task_id, previous_results_table):
                             data=result,
                             sorting=True,
                             virtualization=True,
-                            pagination_mode=False)]
+                            pagination_mode='fe',
+                            pagination_settings={'current_page': 0,
+                                                'page_size': 20})]
     else:
         return previous_results_table
 
