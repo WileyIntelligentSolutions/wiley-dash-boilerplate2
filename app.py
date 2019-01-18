@@ -70,15 +70,13 @@ spinner = base64.b64encode(
 #   App layout
 #   Customize this however you like but be careful not to break the callbacks
 
-# Declare any markdown text here as it becomes difficult to read if
-# defined inside app.layout
-# change these to anything you want:
+# Declare any markdown text here as it becomes difficult to read if defined inside app.layout
+# Change these to anything you want:
 md_description = "This is the new Boilerplate Dash App from Wiley Intelligent Solutions."
 md_help = "Select a year and click submit to see some random data about cats."
 
 # Layout is defined in this dict:
 app.layout = html.Div([
-
     # Insert team logo top-right
     html.Div(
         html.Img(id='robot-logo',
@@ -87,12 +85,10 @@ app.layout = html.Div([
                                                    'float': 'right',
                                                    'vertical-align': 'middle'}
     ),
-
     # App name and description
     # Insert the app name here:
     html.H1(children='Boilerplate2'),
     dcc.Markdown(md_description),
-
     # Invisible divs to safely store the current task-id and task-status 
     # Don't touch this, and don't put it below a DataTable:
     # (if debugging, you can use these to make the divs visible)                     
@@ -100,7 +96,6 @@ app.layout = html.Div([
              style={'display': 'none'}),                
     html.Div(id='task-status', children='task-status',
              style={'display': 'none'}),                
-
     # This is an Interval div and determines the initial app refresh rate.
     # The current settings should be ok for all applications.
     # Don't put it below a Data Table:
@@ -108,7 +103,6 @@ app.layout = html.Div([
         id='task-interval',
         interval=250,  # in milliseconds
         n_intervals=0),
-
     #     ____                      ____
     #    / __ \__ _____ ______ __  / __/__  ______ _
     #   / /_/ / // / -_) __/ // / / _// _ \/ __/  ' \
@@ -119,24 +113,20 @@ app.layout = html.Div([
     #       - drop-down menu
     #       - spinner (hidden unless a task is running)
     #       - submit button
-
     # Display help:
     html.Br(),
     dcc.Markdown(md_help),
-
     # User input
     html.H6(children='Year'),
     dcc.Dropdown(
         id='year_menu',
         options=menu_options
     ),
-    
     # Submit button
     html.Br(),
     html.Button(id='submit', type='submit', children='Submit'),
     html.Br(),
     html.Br(),
-
     # This div contains the spinner and is hidden unless a task is running
     # Do not touch:
     html.Div(
@@ -146,7 +136,6 @@ app.layout = html.Div([
                   "Don't go away - we're working on your results"],
         style={'display': 'none'}
     ),
-
     #      ___               ____        ____
     #     / _ \___ ___ __ __/ / /____   / __/__  ______ _
     #    / , _/ -_|_-</ // / / __(_-<  / _// _ \/ __/  ' \
@@ -155,10 +144,15 @@ app.layout = html.Div([
     #       Intially nothing is displayed.  The form itselfs is defined when
     #       results are returned from the query in the get_results function
     #       below.
-    html.Div(id='results', children=[]),
+    html.Div(id='results-form', children=[]),
     html.Br(),
-
-    # Footer with corporate branding
+    #       ______            __           
+    #      / ____/___  ____  / /____  _____
+    #     / /_  / __ \/ __ \/ __/ _ \/ ___/
+    #    / __/ / /_/ / /_/ / /_/  __/ /    
+    #   /_/    \____/\____/\__/\___/_/     
+    #   Footer                                   
+    #       Footer with corporate branding
     dcc.Markdown(children="***"),
     html.Div(children='Brought to you by Wiley Intelligent Solutions'),
     html.Div([
@@ -176,7 +170,6 @@ app.layout = html.Div([
                'float': 'right',
                'vertical-align': 'middle'}),
 ], className="container")
-
 
 #     _____     ______            __
 #    / ___/__ _/ / / /  ___ _____/ /__ ___
@@ -225,11 +218,11 @@ def start_task_callback(n_clicks, task_id, year_choice):
                Input('task-status', 'children')])
 def toggle_interval_speed(task_id, task_status):
     """This callback is triggered by changes in task-id and task-status divs.  It switches the 
-    page refresh interval to fast if a task is running, or slow if a task is pending or
+    page refresh interval to fast if a task is running, or slow (24 hours) if a task is pending or
     complete."""
     if task_id == 'none':
         slogger('toggle_interval_speed', 'no task-id --> slow refresh')
-        return 60*60*1000
+        return 24*60*60*1000
     if task_id != 'none' and (task_status == 'SUCCESS'
                               or task_status == 'FAILURE'):
         slogger('toggle_interval_speed', 'task-id is {} and status is {} --> slow refresh'.format(task_id, task_status))
@@ -265,13 +258,13 @@ def update_task_status(n_intervals, task_id):
     return str(AsyncResult(task_id).state)
 
 
-@app.callback(Output('results', 'children'),
+@app.callback(Output('results-form', 'children'),
               [Input('task-status', 'children')],
               [State('task-id', 'children')])
 def get_results(task_status, task_id):
     """This callback is triggered by task-status.  It checks the task status, and if the status 
-    is 'SUCCESS' it retrieves results, defines the query form and returns it, otherwise it 
-    results [] so that the table is not displayed"""
+    is 'SUCCESS' it retrieves results, defines the results form and returns it, otherwise it 
+    results [] so that nothing is displayed"""
     status = str(AsyncResult(task_id).state)
     if status == 'SUCCESS':
         # Fetch results from Celery and forget the task
@@ -281,8 +274,7 @@ def get_results(task_status, task_id):
         # Return the populated DataTable
         return [html.Br(),
                 html.A('Download results (Excel)',
-                href="{}/download_excel/{}".format(config.DASH_APP_NAME, task_id)
-                ),
+                href="{}/download_excel/{}".format(config.DASH_APP_NAME, task_id)),
                 html.Br(),
                 dcc.Markdown('Displaying 25 rows at a time'),
                 DataTable(id='results_table',

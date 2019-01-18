@@ -21,3 +21,8 @@ DASH_APP_NAME = 'boilerplate2'
 # Set this to True if you are running the app locally.
 # Set to False before deploying
 SERVE_LOCALLY = True
+
+# Set this to True if you are just trying messing with the app and
+# don't want to implement S3 just yet.  Be aware that the download
+# links will still be displayed and will be broken.
+DISABLE_S3 = True
