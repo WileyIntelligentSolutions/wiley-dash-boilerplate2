@@ -138,6 +138,10 @@ The core of your app should be a function to search or query a database, API, st
 
 You should only need to change this code if you want to pass multiple arguments to your search function in `search.py`.  See [Celery docs](http://docs.celeryproject.org/en/latest/userguide/calling.html) for how to implement this properly.
 
+[loading.py](loading.py)
+
+If your app needs to load data or run some kind of query on deployment, e.g. to populate menu options, you can include functions to do that here.
+
 [app.py](app.py)
 
 Walk through this fully-commented code to customize the look, feel and functionality of your app.
