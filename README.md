@@ -1,4 +1,4 @@
-# Wiley AHEAD2
+# Wiley Dash Boilerplate2
 
 This is the new Boilerplate Dash App from Wiley Intelligent Solutions.
 
