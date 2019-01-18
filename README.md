@@ -128,20 +128,30 @@ $ git push dev master
 
 [config.py](config.py)
 
+Contains some settings that are not appropriate for storing in environment variables (IMO).
+
 Walk through the comments and set the flags as required, e.g. if you don't want to enable S3 just yet, set `DISABLE_S3 = True`.  See [plot.ly docs](https://dash.plot.ly/) for information of authentication and privacy if you want to enabled these features.
 
 [search.py](search.py)
+
+All the search and querying functionality of your app.
 
 The core of your app should be a function to search or query a database, API, static file, etc. and return a set of results.  This function should be developed and tested outside of any web app framework (otherwise you can get in a right old mess) then copy-pasted into the `search` function defined in `search.py`.  `search` must always return a dict type so that a) the data can be handled by Celery, and b) the data can be loaded into the DataTable.
 
 [tasks.py](tasks.py)
 
+Connect your functions in `search.py` to Celery and store all results persistently on S3.
+
 You should only need to change this code if you want to pass multiple arguments to your search function in `search.py`.  See [Celery docs](http://docs.celeryproject.org/en/latest/userguide/calling.html) for how to implement this properly.
 
 [loading.py](loading.py)
 
+Jobs to be performed after the app is deployed.
+
 If your app needs to load data or run some kind of query on deployment, e.g. to populate menu options, you can include functions to do that here.
 
 [app.py](app.py)
+
+The app itself.
 
 Walk through this fully-commented code to customize the look, feel and functionality of your app.
