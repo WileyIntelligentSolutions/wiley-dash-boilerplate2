@@ -130,7 +130,7 @@ $ git push dev master
 
 Contains some settings that are not appropriate for storing in environment variables (IMO).
 
-Walk through the comments and set the flags as required, e.g. if you don't want to enable S3 just yet, set `DISABLE_S3 = True`.  See [plot.ly docs](https://dash.plot.ly/) for information of authentication and privacy if you want to enabled these features.
+Walk through the comments and set the flags as required, e.g. if you don't want to enable S3 just yet, set `DISABLE_S3 = True`.  See [plot.ly docs](https://dash.plot.ly/) for information of authentication and privacy if you want to enable these features.
 
 [search.py](search.py)
 
