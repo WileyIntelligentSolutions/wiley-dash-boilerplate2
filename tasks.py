@@ -1,9 +1,7 @@
-#import datetime
 import time
 import os
-#import sys
 import config
-from slogger import slogger     # We use this to print debugging statements in the Terminal
+from slogger import slogger
 import json
 import pandas as pd
 import boto3
