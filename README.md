@@ -74,7 +74,7 @@ Update requirements.txt:
 $ pip freeze > requirements.txt
 ```
 
-Check that requirements.txt contains `gunicorn`, `redis` and `celery`.  If not, add them at the end.  Following standard practice, we will create 2 apps: One production (boilerplate2) and one as a dev environment (boilerplate2-dev)
+Check that requirements.txt contains `gunicorn`, `redis` and `celery[redis]`.  If not, add them at the end.  Following standard practice, we will create 2 apps: One production (boilerplate2) and one as a dev environment (boilerplate2-dev)
 
 In the Dash Deployment Server:
 
