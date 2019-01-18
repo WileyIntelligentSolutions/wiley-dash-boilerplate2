@@ -264,7 +264,7 @@ def update_task_status(n_intervals, task_id):
 def get_results(task_status, task_id):
     """This callback is triggered by task-status.  It checks the task status, and if the status 
     is 'SUCCESS' it retrieves results, defines the results form and returns it, otherwise it 
-    results [] so that nothing is displayed"""
+    returns [] so that nothing is displayed"""
     status = str(AsyncResult(task_id).state)
     if status == 'SUCCESS':
         # Fetch results from Celery and forget the task
@@ -314,7 +314,7 @@ def download_excel(task_id):
                                 aws_secret_access_key=os.environ['S3_SECRET_ACCESS_KEY'])
     excel_file = client.get_object(Bucket=bucket_name, Key=s3_excel_key)['Body']
     return send_file(excel_file,
-                    attachment_filename='ExpertFinder.xlsx',
+                    attachment_filename='Your_Results.xlsx',
                     as_attachment=True)
 
 
