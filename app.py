@@ -218,15 +218,14 @@ def start_task_callback(n_clicks, task_id, year_choice):
                Input('task-status', 'children')])
 def toggle_interval_speed(task_id, task_status):
     """This callback is triggered by changes in task-id and task-status divs.  It switches the 
-    page refresh interval to fast if a task is running, or slow (24 hours) if a task is pending or
-    complete."""
+    page refresh interval to fast (1 sec) if a task is running, or slow (24 hours) if a task is 
+    pending or complete."""
     if task_id == 'none':
         slogger('toggle_interval_speed', 'no task-id --> slow refresh')
         return 24*60*60*1000
-    if task_id != 'none' and (task_status == 'SUCCESS'
-                              or task_status == 'FAILURE'):
+    if task_id != 'none' and (task_status in ['SUCCESS', 'FAILURE']):
         slogger('toggle_interval_speed', 'task-id is {} and status is {} --> slow refresh'.format(task_id, task_status))
-        return 60*60*1000
+        return 24*60*60*1000
     else:
         slogger('toggle_interval_speed', 'task-id is {} and status is {} --> fast refresh'.format(task_id, task_status))
         return 1000
