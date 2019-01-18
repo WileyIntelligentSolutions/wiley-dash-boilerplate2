@@ -23,12 +23,13 @@ def search(year_choice):
     
     # Generate between 10 and 50 rows of random cat data
     names = ['Jack', 'Fluffy', 'Popsy', 'Doofus', 'Bobek', 'Zofia', 'Puszek', 'Kitka', 'Einstein', 'Mruchek',
-            'Tomek', 'Prezez', 'Miśu', 'Kopernik', 'Łomża']
+            'Tomek', 'Prezez', 'Miśu', 'Kopernik', 'Łomża', 'Filemon', 'Kitcia']
     towns = ['Wrocław', 'Tarnów', 'Sandomierz', 'Zakopane', 'Sopot', 'Kielce', 'Katowice', 'Szczotkowice',
             'Busko-Zdrój', 'Szczecin']
-    brands = ['Whiskers', 'Sheba', 'Felix', 'Applaws', 'Carrefour Whitelabel', 'Tesco Whitelabel', 'Other']
+    brands = ['Whiskers', 'Sheba', 'Felix', 'Applaws', 'Carrefour Whitelabel', 'Tesco Whitelabel', 'Other',
+            'Kiełbasa od cioci']
     results = []
-    for i in range(0, randint(50, 500)):
+    for i in range(0, randint(50, 250)):
         results.append(dict(name=names[randint(0, len(names) - 1)],
                             town=towns[randint(0, len(towns) - 1)],
                             chipcode=randint(100000000, 999999999),
@@ -36,11 +37,11 @@ def search(year_choice):
                             weight=randint(20, 50)*100,
                             age=randint(0, 7)))
     # Include a random dwell to make it seem like we actually did something
-    time.sleep(randint(2, 8))
+    time.sleep(randint(2, 5))
 
-    # Return the results - make sure you return an empty dictionary and not None:
+    # Return the results - make sure you return an empty dictionary if no results were retrieved:
     slogger('search', 'return results')
-    if results is None:
+    if results is None or len(results) == 0:
         return [{}]
     else:
         return results

@@ -102,11 +102,9 @@ app.layout = html.Div([
     html.H1(children='Boilerplate2'),
     dcc.Markdown(md_description),
 
-    # Invisible divs to safely store the current task-id and task-status and
-    # task results
-    # Don't touch this, and don't put it below a Data Table:
-    # (if debugging, you can use these to make the divs visible)
-    #html.Div(id='task-result', children='', style={'display': 'none'}),                        
+    # Invisible divs to safely store the current task-id and task-status 
+    # Don't touch this, and don't put it below a DataTable:
+    # (if debugging, you can use these to make the divs visible)                     
     html.Div(id='task-id', children='none',
              style={'display': 'none'}),                
     html.Div(id='task-status', children='task-status',
@@ -196,31 +194,32 @@ app.layout = html.Div([
 #
 #   Callbacks
 #       - callbacks enable the interactivity of the app
-
 @app.callback(Output('task-id', 'children'),
               [Input('submit', 'n_clicks')],
               [State('task-id', 'children'),     # <--- task-id must always be first
                State('year_menu', 'value')])
-def start_task_callback(n_clicks, task_id, year_choice):    # and pass as args here
-    """This callback is triggered by the submit button click event and initiates the query
-    if the button really was clicked and the query is valid.  Returns the celery task ID 
-    to the invisible div.
+def start_task_callback(n_clicks, task_id, year_choice):    
+    """This callback is triggered by  clicking the submit button click event.  If the button was
+    really pressed (as opposed to being self-triggered when the app is launch) it checks if the
+    user input is valid then puts the query on the Celery queue.  Finally it returns the celery 
+    task ID to the invisible div called 'task-id'.
     """
     # Don't touch this:
     slogger('start_task_callback', 'n_clicks={}, task_id={}, year_choice={}'.format(n_clicks, task_id, year_choice))
     if n_clicks is None or n_clicks == 0:
         return 'none'
     
-    # Validate the user input.  If it can't be validated return 'none' and don't start any tasks
+    # Validate the user input.  If invalid return 'none' to task-id and don't queue anything
     # For our dummy search we just need to make sure the user has selected a year:
     if year_choice is None:
+        # invalid input
         slogger('start_task_callback', 'user has not selected any year')
         return 'none'
     else:
+        # valid, so proceed
         slogger('start_task_callback', 'year_choice={}'.format(year_choice))
 
-    # Everything validated if execution didn't return yet :)
-    # So... put query in the queue and return task id the function
+    # Put search function in the queue and return task id
     # (arguments must always be passed as a list)
     slogger('start_task_callback', 'query accepted and applying to Celery')
     task = query.apply_async([year_choice])
@@ -234,9 +233,9 @@ def start_task_callback(n_clicks, task_id, year_choice):    # and pass as args h
               [Input('task-id', 'children'),
                Input('task-status', 'children')])
 def toggle_interval_speed(task_id, task_status):
-    """This callback is triggered by changes in task-id and task-status divs
-    and switches the page refresh interval to fast if a task is running,
-    or slow if a task is pending or complete."""
+    """This callback is triggered by changes in task-id and task-status divs.  It switches the 
+    page refresh interval to fast if a task is running, or slow if a task is pending or
+    complete."""
     if task_id == 'none':
         slogger('toggle_interval_speed', 'no task-id --> slow refresh')
         return 60*60*1000
@@ -254,8 +253,8 @@ def toggle_interval_speed(task_id, task_status):
               [Input('task-interval', 'n_intervals'),
                Input('task-status', 'children')])
 def show_hide_spinner(n_intervals, task_status):
-    """This callback is triggered by Interval and checks the task progress
-    via an invisible div.  If a task is running it will show the spinner,
+    """This callback is triggered by then Interval clock and checks the task progress
+    via the invisible div 'task-status'.  If a task is running it will show the spinner,
     otherwise it will be hidden."""
     if task_status == 'PROGRESS':
         slogger('show_hide_spinner', 'show spinner')
@@ -270,19 +269,18 @@ def show_hide_spinner(n_intervals, task_status):
               [Input('task-interval', 'n_intervals'),
                Input('task-id', 'children')])
 def update_task_status(n_intervals, task_id):
-    """This callback is triggered by Interval and task-id and checks the task
+    """This callback is triggered by the Interval clock and task-id .  It checks the task
     status in Celery and returns the status to an invisible div"""
     return str(AsyncResult(task_id).state)
 
 
 @app.callback(Output('results', 'children'),
               [Input('task-status', 'children')],
-              [State('task-id', 'children'),
-              State('results', 'children')])
-def get_results(task_status, task_id, previous_results_table):
-    """This callback is triggered by task-status and checks the task status,
-    and if the status is 'SUCCESS' it retrieves results, defines the
-    query form and returns it"""
+              [State('task-id', 'children')])
+def get_results(task_status, task_id):
+    """This callback is triggered by task-status.  It checks the task status, and if the status 
+    is 'SUCCESS' it retrieves results, defines the query form and returns it, otherwise it 
+    results [] so that the table is not displayed"""
     status = str(AsyncResult(task_id).state)
     if status == 'SUCCESS':
         # Fetch results from Celery and forget the task
@@ -295,7 +293,7 @@ def get_results(task_status, task_id, previous_results_table):
                 href="{}/download_excel/{}".format(config.DASH_APP_NAME, task_id)
                 ),
                 html.Br(),
-                dcc.Markdown('Displaying 20 rows at a time'),
+                dcc.Markdown('Displaying 25 rows at a time'),
                 DataTable(id='results_table',
                             columns=[{'id': 'name', 'name': 'Name'},
                                         {'id': 'town', 'name': 'Town'},
@@ -308,9 +306,10 @@ def get_results(task_status, task_id, previous_results_table):
                             virtualization=True,
                             pagination_mode='fe',
                             pagination_settings={'current_page': 0,
-                                                'page_size': 20})]
+                                                'page_size': 25})]
     else:
-        return previous_results_table
+        # don't display any results
+        return []
 
 
 #      ___                  __             __  ____             __
