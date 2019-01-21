@@ -108,7 +108,7 @@ $ git push plotly master
 Scale-up worker (don't forget to do this!!!):
 
 ```bash
-$ ssh dokku@dash-dseplotly.wiley.com ps:scale name-of-your-app worker=1
+$ ssh dokku@your-dash-deployment-server ps:scale name-of-your-app worker=1
 ```
 
 The production app should now be online.
