@@ -130,11 +130,11 @@ Basically, you can put any kind of search or query you want in [search.py](searc
  
 ### How does this app work?
 
-This app supports running longer-running tasks without getting into trouble with server timeouts and browser timeouts.  We do this by running slower processes away from the app asynchronously.  Like a waiter in a restaurant collects as a orders from the customer, relays the orders to the kitchen and, inbetween serving other customers, they can check in with the kitchen periodically to see which orders are ready to collect.  In our case, the "waiters" are gunicorn workers and the "kitchen" is Redis.  Celery acts as a simple, Pythonic interface to Redis.
+This app supports running longer-running tasks without getting into trouble with server timeouts and browser timeouts.  We do this by running slower processes away from the app asynchronously, like a waiter in a restaurant collects orders from a customer, relays the order to the kitchen and, inbetween serving other customers, checks in with the kitchen periodically to see which orders are ready to collect.  In our case, the "waiters" are gunicorn workers and the "kitchen" is Redis.  Celery acts as a simple, Pythonic interface to Redis.
 
 ![](boilerplate2-diagram.gif)
 
-When you deploy to dash, the webserver and all supporting files exist in a container, but the function or functions that run your slower processes will be exports to a Redis database running outside the container on the Dash server.
+When you deploy to dash, the webserver and all supporting files exist in a container, but the function or functions that run your slower processes are exported to a Redis database running outside the container on the Dash server.
 
 ### What do the files do?
 
@@ -199,3 +199,11 @@ This tells your Dash server which version of Python you want to run.  Ideally yo
 [slogger.py](slogger.py)
 
 This is just a very simple tool we made to log messages in the Terminal for debugging.
+
+[assets/*]()
+
+This folder contains any images you want to display in the app layout.
+
+[reports/*]()
+
+This folder is where query results are stored and - if enabled - transferred to S3.  When deployed on Dash, these files are only temporary.  When running locally, they are permanent and you'll have to manually delete them.
