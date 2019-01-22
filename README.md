@@ -1,6 +1,8 @@
 # Wiley Dash Boilerplate2
 
-This is the new Boilerplate Dash App from Wiley Intelligent Solutions.
+This is the new Boilerplate Dash App from Wiley Intelligent Solutions and it looks like this:
+
+![](boilerplate2_screenshot.png)
 
 ## Key features
 
