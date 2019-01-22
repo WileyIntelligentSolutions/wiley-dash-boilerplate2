@@ -126,6 +126,18 @@ $ git push dev master
 
 ## How to customize this app
 
+Basically, you can put any kind of search or query you want in [search.py](search.py) and change the app layout to receieve a query from the user and display the results in [app.py](app.py)
+ 
+### How does this app work?
+
+This app supports running longer-running tasks without getting into trouble with server timeouts and browser timeouts.  We do this by running slower processes away from the app asynchronously.  Like a waiter in a restaurant collects as a orders from the customer, relays the orders to the kitchen and, inbetween serving other customers, they can check in with the kitchen periodically to see which orders are ready to collect.  In our case, the "waiters" are gunicorn workers and the "kitchen" is Redis.  Celery acts as a simple, Pythonic interface to Redis.
+
+![](boilerplate2-diagram.gif)
+
+When you deploy to dash, the webserver and all supporting files exist in a container, but the function or functions that run your slower processes will be exports to a Redis database running outside the container on the Dash server.
+
+### What do the files do?
+
 [config.py](config.py)
 
 Contains some settings that are not appropriate for storing in environment variables (IMO).
@@ -155,3 +167,35 @@ If your app needs to load data or run some kind of query on deployment, e.g. to 
 The app itself.
 
 Walk through this fully-commented code to customize the look, feel and functionality of your app.
+
+[.env](.env)
+
+You will need to create this yourself because it is not included in the git repo.  When running locally, store you credentials in this file.  NEVER include real credentials in your code and never add .env files to your git repos!
+
+[.gitignore](.gitignore)
+
+This tells git which files to ignore (e.g. .env, .csv, and so on).
+
+[apt-packages](apt-packages)
+
+This is just an add-on for Redis - nothing to see here.
+
+[auth.py](auth.py)
+
+This is just a wrapper for Dash authentication - nothing to see here either.
+
+[LICENSE](LICENSE)
+
+Just a standard git file to show which license we're using (MIT in this case).
+
+[requirements.txt](requirements.txt)
+
+A list of packages to install when we deploy (or if you've just downloaded this repo and want to run it locally - see above)
+
+[runtime.txt](runtime.txt)
+
+This tells your Dash server which version of Python you want to run.  Ideally you should use the latest version of Python supported by your Dash server.
+
+[slogger.py](slogger.py)
+
+This is just a very simple tool we made to log messages in the Terminal for debugging.
