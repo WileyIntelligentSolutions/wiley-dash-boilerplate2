@@ -126,6 +126,12 @@ $ git remote add dev https://your-dash-deployment-server/GIT/boilerplate2-dev
 $ git push dev master
 ```
 
+Top tip:  Working on a branch and want to test deploy before merging?  Push the local branch to the remote master like this:
+
+```bash
+$ git push dev your-local-branch:master
+```
+
 ## How to customize this app
 
 Basically, you can put any kind of search or query you want in [search.py](search.py) and change the app layout to receieve a query from the user and display the results in [app.py](app.py)
