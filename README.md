@@ -110,7 +110,7 @@ $ git push plotly master
 Scale-up worker (don't forget to do this!!!):
 
 ```bash
-$ ssh dokku@your-dash-deployment-server ps:scale name-of-your-app worker=1
+$ ssh dokku@your-dash-deployment-server ps:scale boilerplate2 worker=1
 ```
 
 The production app should now be online.
@@ -124,6 +124,7 @@ In `config.py` change `DASH_APP_NAME=boilerplate2` to `DASH_APP_NAME=boilerplate
 ```bash
 $ git remote add dev https://your-dash-deployment-server/GIT/boilerplate2-dev
 $ git push dev master
+$ ssh dokku@your-dash-deployment-server ps:scale boilerplate2-dev worker=1
 ```
 
 Top tip:  Working on a branch and want to test deploy before merging?  Push the local branch to the remote master like this:
@@ -138,7 +139,7 @@ Basically, you can put any kind of search or query you want in [search.py](searc
  
 ### How does this app work?
 
-This app supports running longer-running tasks without getting into trouble with server timeouts and browser timeouts.  We do this by running slower processes away from the app asynchronously, like a waiter in a restaurant collects orders from a customer, relays the order to the kitchen and, inbetween serving other customers, checks in with the kitchen periodically to see which orders are ready to collect.  In our case, the "waiters" are gunicorn workers and the "kitchen" is Redis.  Celery acts as a simple, Pythonic interface to Redis.
+This app supports running longer-running tasks without getting into trouble with server timeouts and browser timeouts.  We do this by running slower processes away from the app asynchronously, like a waiter in a restaurant collects orders from a customer, passes the order to the kitchen and, inbetween serving other customers, checks in with the kitchen periodically to see which orders are ready to collect.  In our case, the "waiters" are gunicorn workers and the "kitchen" is Redis.  Celery acts as a simple, Pythonic interface to Redis.
 
 ![](boilerplate2-diagram.gif)
 
@@ -178,7 +179,7 @@ Walk through this fully-commented code to customize the look, feel and functiona
 
 [.env](.env)
 
-You will need to create this yourself because it is not included in the git repo.  When running locally, store you credentials in this file.  NEVER include real credentials in your code and never add .env files to your git repos!
+You will need to create this yourself because it is not included in the git repo.  When running locally, store you credentials in this file.  NEVER include credentials in your code and never add .env files to your git repos!
 
 [.gitignore](.gitignore)
 
