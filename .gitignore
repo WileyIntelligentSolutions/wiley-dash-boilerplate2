@@ -104,3 +104,4 @@ ENV/
 .DS_Store
 
 *.xlsx
+settings.json

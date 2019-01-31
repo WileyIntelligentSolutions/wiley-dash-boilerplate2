@@ -264,8 +264,7 @@ def get_results(task_status, task_id):
     """This callback is triggered by task-status.  It checks the task status, and if the status 
     is 'SUCCESS' it retrieves results, defines the results form and returns it, otherwise it 
     returns [] so that nothing is displayed"""
-    status = str(AsyncResult(task_id).state)
-    if status == 'SUCCESS':
+    if task_status == 'SUCCESS':
         # Fetch results from Celery and forget the task
         slogger('get_results', 'retrieve results for task-id {} from Celery'.format(task_id))
         result = AsyncResult(task_id).result    # fetch results
