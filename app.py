@@ -269,7 +269,10 @@ def get_results(task_status, task_id):
         slogger('get_results', 'retrieve results for task-id {} from Celery'.format(task_id))
         result = AsyncResult(task_id).result    # fetch results
         forget = AsyncResult(task_id).forget()  # delete from Celery
-        # Return the populated DataTable
+        # Display a message if their were no hits
+        if result == [{}]:
+            return ["We couldn\'t find any results.  Try broadening your search."]
+        # Otherwise return the populated DataTable
         return [html.Br(),
                 html.A('Download results (Excel)',
                 href="{}/download_excel/{}".format(config.DASH_APP_NAME, task_id)),
